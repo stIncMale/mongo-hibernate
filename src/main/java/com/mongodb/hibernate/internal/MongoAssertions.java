@@ -41,4 +41,30 @@ public final class MongoAssertions {
         }
         return value;
     }
+
+    /**
+     * @param value A value to check.
+     * @param <T> The type of {@code value}.
+     * @return {@code null}.
+     * @throws AssertionError If {@code value} is not {@code null}.
+     */
+    @Nullable
+    public static <T> T assertNull(@Nullable final T value) throws AssertionError {
+        if (value != null) {
+            throw new AssertionError(value.toString());
+        }
+        return null;
+    }
+
+    /**
+     * @param value A value to check.
+     * @return {@code true}.
+     * @throws AssertionError If {@code value} is {@code false}.
+     */
+    public static boolean assertTrue(final boolean value) throws AssertionError {
+        if (!value) {
+            throw new AssertionError();
+        }
+        return true;
+    }
 }
