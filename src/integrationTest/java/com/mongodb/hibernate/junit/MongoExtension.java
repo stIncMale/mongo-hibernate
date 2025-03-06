@@ -20,7 +20,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.hibernate.internal.cfg.MongoConfigurationBuilder;
-import org.hibernate.SessionFactory;
+import java.util.Map;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -28,33 +28,50 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 public final class MongoExtension implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback {
+    private static final int TOP_TEST_CONTAINER_NESTING_LEVEL = 0;
 
-    private SessionFactory sessionFactory;
+    private int testContainerNestingLevel = TOP_TEST_CONTAINER_NESTING_LEVEL - 1;
     private MongoClient mongoClient;
     private MongoDatabase mongoDatabase;
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        sessionFactory = new Configuration().buildSessionFactory();
-        var mongoConfig = new MongoConfigurationBuilder(sessionFactory.getProperties()).build();
-        mongoClient = MongoClients.create(mongoConfig.mongoClientSettings());
-        mongoDatabase = mongoClient.getDatabase(mongoConfig.databaseName());
-
-        var testClass = context.getRequiredTestClass();
-
-        if (MongoDatabaseAware.class.isAssignableFrom(testClass)) {
-            ((MongoDatabaseAware) context.getRequiredTestInstance()).injectMongoDatabase(mongoDatabase);
+        testContainerNestingLevel += 1;
+        var mongoDatabaseAware = getMongoDatabaseAwareTestInstance(context);
+        if (mongoDatabaseAware != null) {
+            if (mongoDatabase == null) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> hibernateProperties =
+                        (Map<String, Object>) (Map<?, Object>) new Configuration().getProperties();
+                var mongoConfig = new MongoConfigurationBuilder(hibernateProperties).build();
+                mongoClient = MongoClients.create(mongoConfig.mongoClientSettings());
+                mongoDatabase = mongoClient.getDatabase(mongoConfig.databaseName());
+            }
+            mongoDatabaseAware.injectMongoDatabase(mongoDatabase);
         }
     }
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        mongoDatabase.drop();
+        if (mongoDatabase != null) {
+            mongoDatabase.drop();
+        }
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
-        mongoClient.close();
-        sessionFactory.close();
+        try {
+            if (testContainerNestingLevel == TOP_TEST_CONTAINER_NESTING_LEVEL && mongoClient != null) {
+                mongoClient.close();
+            }
+        } finally {
+            testContainerNestingLevel -= 1;
+        }
+    }
+
+    private static MongoDatabaseAware getMongoDatabaseAwareTestInstance(ExtensionContext context) {
+        return context.getTestInstance()
+                .map(o -> o instanceof MongoDatabaseAware mongoDatabaseAware ? mongoDatabaseAware : null)
+                .orElse(null);
     }
 }
