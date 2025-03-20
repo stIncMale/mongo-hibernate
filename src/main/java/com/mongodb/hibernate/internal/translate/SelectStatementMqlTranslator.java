@@ -24,29 +24,32 @@ import org.hibernate.sql.ast.tree.Statement;
 import org.hibernate.sql.ast.tree.select.SelectStatement;
 import org.hibernate.sql.exec.spi.JdbcOperationQuerySelect;
 import org.hibernate.sql.exec.spi.JdbcParameterBindings;
+import org.hibernate.sql.results.jdbc.spi.JdbcValuesMappingProducerProvider;
 import org.jspecify.annotations.Nullable;
 
 final class SelectStatementMqlTranslator extends AbstractMqlTranslator<JdbcOperationQuerySelect> {
 
     private final SelectStatement selectStatement;
+    private final JdbcValuesMappingProducerProvider jdbcValuesMappingProducerProvider;
 
     SelectStatementMqlTranslator(SessionFactoryImplementor sessionFactory, SelectStatement selectStatement) {
         super(sessionFactory);
         this.selectStatement = selectStatement;
+        jdbcValuesMappingProducerProvider =
+                sessionFactory.getServiceRegistry().requireService(JdbcValuesMappingProducerProvider.class);
     }
 
     @Override
     public JdbcOperationQuerySelect translate(
             @Nullable JdbcParameterBindings jdbcParameterBindings, QueryOptions queryOptions) {
         var aggregateCommand = acceptAndYield((Statement) selectStatement, COLLECTION_AGGREGATE);
-        var mql = renderMongoAstNode(aggregateCommand);
-        var sessionFactory = getSessionFactory();
-        var jdbcValuesMappingProducer = sessionFactory
-                .getFastSessionServices()
-                .getJdbcValuesMappingProducerProvider()
-                .buildMappingProducer(selectStatement, sessionFactory);
+        var jdbcValuesMappingProducer =
+                jdbcValuesMappingProducerProvider.buildMappingProducer(selectStatement, getSessionFactory());
 
         return new JdbcOperationQuerySelect(
-                mql, getParameterBinders(), jdbcValuesMappingProducer, getAffectedTableNames());
+                renderMongoAstNode(aggregateCommand),
+                getParameterBinders(),
+                jdbcValuesMappingProducer,
+                getAffectedTableNames());
     }
 }
