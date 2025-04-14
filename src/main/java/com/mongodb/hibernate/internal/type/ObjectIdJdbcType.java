@@ -80,6 +80,7 @@ public final class ObjectIdJdbcType implements JdbcType {
         static final Binder INSTANCE = new Binder();
 
         private Binder() {
+            // VAKOTODO Do not use `INSTANCE`, make the class inner?
             super(JAVA_TYPE, ObjectIdJdbcType.INSTANCE);
         }
 
@@ -104,6 +105,7 @@ public final class ObjectIdJdbcType implements JdbcType {
         static final Extractor INSTANCE = new Extractor();
 
         private Extractor() {
+            // VAKOTODO Do not use `INSTANCE`, make the class inner?
             super(JAVA_TYPE, ObjectIdJdbcType.INSTANCE);
         }
 
