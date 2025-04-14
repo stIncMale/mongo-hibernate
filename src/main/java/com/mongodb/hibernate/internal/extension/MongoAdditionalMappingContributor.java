@@ -83,7 +83,7 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
         var idColumns = identifier.getColumns();
         if (idColumns.size() > 1) {
             throw new FeatureNotSupportedException(format(
-                    "%s: %s does not support [%s] field spanning multiple columns %s",
+                    "%s: %s does not support [%s] spanning multiple columns %s",
                     persistentClass, MONGO_DBMS_NAME, ID_FIELD_NAME, idColumns));
         }
         assertTrue(idColumns.size() == 1);
