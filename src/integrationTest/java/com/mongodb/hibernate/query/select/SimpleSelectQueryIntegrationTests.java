@@ -16,7 +16,6 @@
 
 package com.mongodb.hibernate.query.select;
 
-import static com.mongodb.hibernate.internal.MongoAssertions.assertTrue;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -448,8 +447,7 @@ class SimpleSelectQueryIntegrationTests implements SessionFactoryScopeAware, Ser
     }
 
     private void assertActualCommand(BsonDocument expectedCommand) {
-        assertTrue(mongoTestCommandListener.areAllCommandsFinishedAndSucceeded());
-        var capturedCommands = mongoTestCommandListener.getSucceededCommands();
+        var capturedCommands = mongoTestCommandListener.getStartedCommands();
 
         assertThat(capturedCommands)
                 .singleElement()

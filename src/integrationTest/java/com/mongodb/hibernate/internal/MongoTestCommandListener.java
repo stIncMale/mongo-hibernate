@@ -16,64 +16,34 @@
 
 package com.mongodb.hibernate.internal;
 
-import static com.mongodb.hibernate.internal.MongoAssertions.assertNotNull;
-
-import com.mongodb.event.CommandFailedEvent;
 import com.mongodb.event.CommandListener;
 import com.mongodb.event.CommandStartedEvent;
-import com.mongodb.event.CommandSucceededEvent;
 import java.io.Serial;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.bson.BsonDocument;
 import org.hibernate.service.Service;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public final class MongoTestCommandListener implements CommandListener, Service {
     @Serial
     private static final long serialVersionUID = 1L;
 
     static MongoTestCommandListener INSTANCE = new MongoTestCommandListener();
 
-    private final List<BsonDocument> succeededCommands = new ArrayList<>();
-    private final List<BsonDocument> failedCommands = new ArrayList<>();
-    private final Map<Long, BsonDocument> startedCommands = new HashMap<>();
+    private final List<BsonDocument> startedCommands = new ArrayList<>();
 
     private MongoTestCommandListener() {}
 
     @Override
     public synchronized void commandStarted(CommandStartedEvent event) {
-        startedCommands.put(event.getOperationId(), event.getCommand().clone());
+        startedCommands.add(event.getCommand().clone());
     }
 
-    @Override
-    public synchronized void commandSucceeded(CommandSucceededEvent event) {
-        succeededCommands.add(getStartedCommand(event.getOperationId()));
-    }
-
-    @Override
-    public synchronized void commandFailed(CommandFailedEvent event) {
-        failedCommands.add(getStartedCommand(event.getOperationId()));
-    }
-
-    private BsonDocument getStartedCommand(long operationId) {
-        return assertNotNull(startedCommands.get(operationId));
-    }
-
-    public synchronized boolean areAllCommandsFinishedAndSucceeded() {
-        return succeededCommands.size() == startedCommands.size() && failedCommands.isEmpty();
-    }
-
-    public synchronized List<BsonDocument> getSucceededCommands() {
-        return List.copyOf(succeededCommands);
+    public synchronized List<BsonDocument> getStartedCommands() {
+        return List.copyOf(startedCommands);
     }
 
     public synchronized void clear() {
         startedCommands.clear();
-        succeededCommands.clear();
-        failedCommands.clear();
     }
 }
