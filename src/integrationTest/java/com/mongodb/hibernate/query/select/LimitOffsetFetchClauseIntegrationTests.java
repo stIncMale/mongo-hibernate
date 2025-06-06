@@ -550,7 +550,6 @@ class LimitOffsetFetchClauseIntegrationTests extends AbstractSelectionQueryInteg
             getSessionFactoryScope().inTransaction(session -> {
                 setQueryOptionsAndQuery(session, null, null, format(expectedMqlTemplate, "", ""));
                 var initialSelectTranslatingCount = translatingCacheTestingDialect.getSelectTranslatingCounter();
-
                 assertThat(initialSelectTranslatingCount).isPositive();
 
                 setQueryOptionsAndQuery(session, 1, null, format(expectedMqlTemplate, "{\"$skip\": 1},", ""));
@@ -568,31 +567,16 @@ class LimitOffsetFetchClauseIntegrationTests extends AbstractSelectionQueryInteg
         void testCacheInvalidatedDueToQueryOptionsRemoved() {
             getSessionFactoryScope().inTransaction(session -> {
                 setQueryOptionsAndQuery(session, 10, null, format(expectedMqlTemplate, "{\"$skip\": 10},", ""));
-
                 var initialSelectTranslatingCount = translatingCacheTestingDialect.getSelectTranslatingCounter();
-
                 assertThat(initialSelectTranslatingCount).isPositive();
 
                 setQueryOptionsAndQuery(session, null, null, format(expectedMqlTemplate, "", ""));
-
                 assertThat(translatingCacheTestingDialect.getSelectTranslatingCounter())
                         .isEqualTo(initialSelectTranslatingCount + 1);
-            });
-        }
 
-        @Test
-        void testCacheInvalidatedDueToQueryOptionsChanged() {
-            getSessionFactoryScope().inTransaction(session -> {
-                setQueryOptionsAndQuery(session, 10, null, format(expectedMqlTemplate, "{\"$skip\": 10},", ""));
-
-                var initialSelectTranslatingCount = translatingCacheTestingDialect.getSelectTranslatingCounter();
-
-                assertThat(initialSelectTranslatingCount).isPositive();
-
-                setQueryOptionsAndQuery(session, null, 20, format(expectedMqlTemplate, "", "{\"$limit\": 20},"));
-
+                setQueryOptionsAndQuery(session, null, 10, format(expectedMqlTemplate, "", "{\"$limit\": 10},"));
                 assertThat(translatingCacheTestingDialect.getSelectTranslatingCounter())
-                        .isEqualTo(initialSelectTranslatingCount + 1);
+                        .isEqualTo(initialSelectTranslatingCount + 2);
             });
         }
 
