@@ -320,7 +320,7 @@ public final class ValueConversions {
         }
     }
 
-    private static Instant toInstantDomainValue(final BsonDateTime value) {
+    private static Instant toInstantDomainValue(BsonDateTime value) {
         return Instant.ofEpochMilli(value.getValue());
     }
 

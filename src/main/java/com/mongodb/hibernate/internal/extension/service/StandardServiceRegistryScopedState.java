@@ -71,7 +71,7 @@ public final class StandardServiceRegistryScopedState implements Service {
             });
         }
 
-        private static void forbidTemporalConfiguration(final Map<String, Object> configurationValues) {
+        private static void forbidTemporalConfiguration(Map<String, Object> configurationValues) {
             Object enabled = configurationValues.get(JAVA_TIME_USE_DIRECT_JDBC);
             if (enabled instanceof Boolean && (Boolean) enabled) {
                 throw new HibernateException(

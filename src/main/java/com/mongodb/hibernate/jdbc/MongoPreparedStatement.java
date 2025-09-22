@@ -367,7 +367,7 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
         }
     }
 
-    static void checkTimeZone(final TimeZone timeZone) throws SQLFeatureNotSupportedException {
+    static void checkTimeZone(TimeZone timeZone) throws SQLFeatureNotSupportedException {
         ZoneId calendarZoneId = timeZone.toZoneId();
         if (!calendarZoneId.getRules().equals(ETC_UTC_ZONE_RULES)) {
             throw new SQLFeatureNotSupportedException(

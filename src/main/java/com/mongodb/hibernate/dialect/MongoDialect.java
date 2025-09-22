@@ -69,7 +69,7 @@ public final class MongoDialect extends Dialect {
     }
 
     @Override
-    public void appendDatetimeFormat(final SqlAppender appender, final String format) {
+    public void appendDatetimeFormat(SqlAppender appender, String format) {
         throw new FeatureNotSupportedException("TODO-HIBERNATE-88 https://jira.mongodb.org/browse/HIBERNATE-88");
     }
 

@@ -555,7 +555,7 @@ class MongoPreparedStatementIntegrationTests {
         return Math.toIntExact(MILLISECONDS.toNanos(millis));
     }
 
-    private static long toUtc(final LocalDateTime localDateTime) {
+    private static long toUtc(LocalDateTime localDateTime) {
         return localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 }

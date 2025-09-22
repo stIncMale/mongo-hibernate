@@ -86,7 +86,7 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
         });
     }
 
-    private static void checkPropertyTypes(final PersistentClass persistentClass) {
+    private static void checkPropertyTypes(PersistentClass persistentClass) {
         persistentClass.getProperties().forEach(property -> {
             forbidTemporalTypes(persistentClass, property);
         });
@@ -130,7 +130,7 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
         });
     }
 
-    private static void forbidTemporalTypes(final PersistentClass persistentClass, final Property property) {
+    private static void forbidTemporalTypes(PersistentClass persistentClass, Property property) {
         Class<?> persistenceAttributeType = property.getType().getReturnedClass();
         if (UNSUPPORTED_TEMPORAL_TYPES.contains(persistenceAttributeType)) {
             throw new FeatureNotSupportedException(format(
