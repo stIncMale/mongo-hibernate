@@ -34,7 +34,6 @@ import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.boot.model.TypeContributions;
 import org.hibernate.dialect.DatabaseVersion;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.TimeZoneSupport;
 import org.hibernate.dialect.aggregate.AggregateSupport;
 import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
 import org.hibernate.service.ServiceRegistry;
@@ -61,11 +60,6 @@ public final class MongoDialect extends Dialect {
 
     public MongoDialect(DialectResolutionInfo info) {
         super(info);
-    }
-
-    @Override
-    public TimeZoneSupport getTimeZoneSupport() {
-        return TimeZoneSupport.NONE;
     }
 
     @Override
