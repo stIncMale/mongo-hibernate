@@ -28,14 +28,12 @@ import com.mongodb.hibernate.internal.type.MongoStructJdbcType;
 import com.mongodb.hibernate.internal.type.ObjectIdJdbcType;
 import java.math.BigDecimal;
 import java.sql.Array;
-import java.sql.Date;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLSyntaxErrorException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.ZoneId;
@@ -165,27 +163,6 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
     }
 
     @Override
-    public void setDate(int parameterIndex, Date x) throws SQLException {
-        checkClosed();
-        checkParameterIndex(parameterIndex);
-        throw new SQLFeatureNotSupportedException("Date type is not supported");
-    }
-
-    @Override
-    public void setTime(int parameterIndex, Time x) throws SQLException {
-        checkClosed();
-        checkParameterIndex(parameterIndex);
-        throw new SQLFeatureNotSupportedException("Time type is not supported");
-    }
-
-    @Override
-    public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
-        checkClosed();
-        checkParameterIndex(parameterIndex);
-        throw new SQLFeatureNotSupportedException("Timestamp type with default calendar is not supported");
-    }
-
-    @Override
     public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
         checkClosed();
         checkParameterIndex(parameterIndex);
@@ -213,20 +190,6 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
         checkClosed();
         checkParameterIndex(parameterIndex);
         setParameter(parameterIndex, toBsonValue(x));
-    }
-
-    @Override
-    public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
-        checkClosed();
-        checkParameterIndex(parameterIndex);
-        throw new SQLFeatureNotSupportedException("Date type is not supported");
-    }
-
-    @Override
-    public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
-        checkClosed();
-        checkParameterIndex(parameterIndex);
-        throw new SQLFeatureNotSupportedException("Time type is not supported");
     }
 
     @Override

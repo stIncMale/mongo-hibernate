@@ -38,11 +38,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.hibernate.internal.type.ObjectIdJdbcType;
 import java.math.BigDecimal;
 import java.sql.Array;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Calendar;
@@ -253,14 +251,9 @@ class MongoPreparedStatementTests {
                 () -> asserter.accept(() -> mongoPreparedStatement.setBigDecimal(parameterIndex, new BigDecimal(1))),
                 () -> asserter.accept(() -> mongoPreparedStatement.setString(parameterIndex, "")),
                 () -> asserter.accept(() -> mongoPreparedStatement.setBytes(parameterIndex, "".getBytes())),
-                () -> asserter.accept(() -> mongoPreparedStatement.setDate(parameterIndex, new Date(now))),
-                () -> asserter.accept(() -> mongoPreparedStatement.setTime(parameterIndex, new Time(now))),
-                () -> asserter.accept(() -> mongoPreparedStatement.setTimestamp(parameterIndex, new Timestamp(now))),
                 () -> asserter.accept(
                         () -> mongoPreparedStatement.setObject(parameterIndex, Mockito.mock(Array.class), Types.OTHER)),
                 () -> asserter.accept(() -> mongoPreparedStatement.setArray(parameterIndex, Mockito.mock(Array.class))),
-                () -> asserter.accept(() -> mongoPreparedStatement.setDate(parameterIndex, new Date(now), calendar)),
-                () -> asserter.accept(() -> mongoPreparedStatement.setTime(parameterIndex, new Time(now), calendar)),
                 () -> asserter.accept(
                         () -> mongoPreparedStatement.setTimestamp(parameterIndex, new Timestamp(now), calendar)));
     }

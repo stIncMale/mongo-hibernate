@@ -41,11 +41,9 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.hibernate.internal.type.ValueConversions;
 import java.math.BigDecimal;
 import java.sql.Array;
-import java.sql.Date;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -148,34 +146,6 @@ final class MongoResultSet implements ResultSetAdapter {
         checkClosed();
         checkColumnIndex(columnIndex);
         return getValue(columnIndex, ValueConversions::toByteArrayDomainValue);
-    }
-
-    @Override
-    public @Nullable Date getDate(int columnIndex) throws SQLException {
-        checkClosed();
-        checkColumnIndex(columnIndex);
-        throw new SQLFeatureNotSupportedException("Date type is not supported");
-    }
-
-    @Override
-    public @Nullable Time getTime(int columnIndex) throws SQLException {
-        checkClosed();
-        checkColumnIndex(columnIndex);
-        throw new SQLFeatureNotSupportedException("Time type is not supported");
-    }
-
-    @Override
-    public @Nullable Time getTime(int columnIndex, Calendar cal) throws SQLException {
-        checkClosed();
-        checkColumnIndex(columnIndex);
-        throw new SQLFeatureNotSupportedException("Time type is not supported");
-    }
-
-    @Override
-    public @Nullable Timestamp getTimestamp(int columnIndex) throws SQLException {
-        checkClosed();
-        checkColumnIndex(columnIndex);
-        throw new SQLFeatureNotSupportedException("Timestamp type with default calendar is not supported");
     }
 
     @Override
