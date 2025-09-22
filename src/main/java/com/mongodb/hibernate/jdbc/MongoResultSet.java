@@ -151,13 +151,6 @@ final class MongoResultSet implements ResultSetAdapter {
     }
 
     @Override
-    public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-        checkClosed();
-        checkColumnIndex(columnIndex);
-        throw new SQLFeatureNotSupportedException("Date type is not supported");
-    }
-
-    @Override
     public @Nullable Date getDate(int columnIndex) throws SQLException {
         checkClosed();
         checkColumnIndex(columnIndex);
