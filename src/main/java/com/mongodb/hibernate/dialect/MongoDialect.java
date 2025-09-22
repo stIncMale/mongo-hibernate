@@ -62,11 +62,6 @@ public final class MongoDialect extends Dialect {
         super(info);
     }
 
-    @Override
-    public void appendDatetimeFormat(SqlAppender appender, String format) {
-        throw new FeatureNotSupportedException("TODO-HIBERNATE-88 https://jira.mongodb.org/browse/HIBERNATE-88");
-    }
-
     /**
      * This constructor is called only if Hibernate ORM falls back to it due to a failure of
      * {@link MongoDialect#MongoDialect(DialectResolutionInfo)}.
@@ -243,5 +238,10 @@ public final class MongoDialect extends Dialect {
         functionRegistry.register("array_contains_nullable", new MongoArrayContainsFunction(true, typeConfiguration));
         functionRegistry.register("array_includes", new MongoArrayIncludesFunction(false, typeConfiguration));
         functionRegistry.register("array_includes_nullable", new MongoArrayIncludesFunction(true, typeConfiguration));
+    }
+
+    @Override
+    public void appendDatetimeFormat(SqlAppender appender, String format) {
+        throw new FeatureNotSupportedException("TODO-HIBERNATE-88 https://jira.mongodb.org/browse/HIBERNATE-88");
     }
 }
