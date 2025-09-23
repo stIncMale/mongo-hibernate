@@ -32,8 +32,6 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.hibernate.annotations.Struct;
 import org.hibernate.boot.ResourceStreamLocator;
@@ -53,7 +51,7 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
      */
     private static final Collection<String> UNSUPPORTED_FIELD_NAME_CHARACTERS = Set.of(".", "$");
 
-    private static final Set<Class<?>> UNSUPPORTED_TEMPORAL_TYPES = new HashSet<>(List.of(
+    private static final Set<Class<?>> UNSUPPORTED_TEMPORAL_TYPES = Set.of(
             Calendar.class,
             Date.class,
             java.sql.Date.class,
@@ -62,7 +60,7 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
             LocalTime.class,
             LocalDateTime.class,
             ZonedDateTime.class,
-            OffsetTime.class));
+            OffsetTime.class);
 
     public MongoAdditionalMappingContributor() {}
 
