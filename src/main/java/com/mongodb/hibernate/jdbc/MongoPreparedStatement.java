@@ -36,7 +36,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLSyntaxErrorException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.zone.ZoneRules;
 import java.util.ArrayList;
@@ -331,10 +330,10 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
     }
 
     static void checkTimeZone(TimeZone timeZone) throws SQLFeatureNotSupportedException {
-        ZoneId calendarZoneId = timeZone.toZoneId();
-        if (!calendarZoneId.getRules().equals(ETC_UTC_ZONE_RULES)) {
+        var zoneId = timeZone.toZoneId();
+        if (!zoneId.getRules().equals(ETC_UTC_ZONE_RULES)) {
             throw new SQLFeatureNotSupportedException(
-                    format("Timezone [%s] is not supported. Only [Etc/UTC] timezone is supported", calendarZoneId));
+                    format("Timezone [%s] is not supported. Only [Etc/UTC] timezone is supported", zoneId));
         }
     }
 }
