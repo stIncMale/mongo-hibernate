@@ -132,7 +132,7 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
     }
 
     private static void forbidTemporalTypes(PersistentClass persistentClass, Property property) {
-        Class<?> persistenceAttributeType = property.getType().getReturnedClass();
+        var persistenceAttributeType = property.getType().getReturnedClass();
         if (UNSUPPORTED_TEMPORAL_TYPES.contains(persistenceAttributeType)) {
             throw new FeatureNotSupportedException(format(
                     "%s: the persistent attribute [%s] has type [%s] that is not supported",
