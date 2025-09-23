@@ -210,7 +210,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
     }
 
     @Embeddable
-    @Struct(name = "aggregate_embeddable")
+    @Struct(name = "AggregateEmbeddable")
     static class AggregateEmbeddable {
         Instant instant;
 
