@@ -61,7 +61,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         this.sessionFactoryScope = sessionFactoryScope;
     }
 
-    public static Stream<Arguments> differentTimeZones() {
+    private static Stream<Arguments> differentTimeZones() {
         return Stream.of(
                 Arguments.of(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("GMT+1")),
                 Arguments.of(TimeZone.getTimeZone("GMT+1"), TimeZone.getTimeZone("GMT+1")),
@@ -77,7 +77,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
      * <p>For array/collection element values and for @Struct/@Embeddable component attributes the same Instant is
      * propagated unchanged: each Instant is stored similarly to TIMESTAMP_UTC semantics
      */
-    public static Stream<Arguments> instantPersistAndReadParameters() {
+    private static Stream<Arguments> instantPersistAndReadParameters() {
         return differentTimeZones().flatMap(arguments -> {
             TimeZone systemDefaultTimeZone = (TimeZone) arguments.get()[0];
             TimeZone jdbcTimezone = (TimeZone) arguments.get()[0];
@@ -186,9 +186,9 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         AggregateEmbeddable aggregateEmbeddable;
         InlinedEmbeddable inlinedEmbeddable;
 
-        public Item() {}
+        Item() {}
 
-        public Item(int id, Instant instant) {
+        Item(int id, Instant instant) {
             this.id = id;
             this.instant = instant;
             this.instantCollection = List.of(instant, instant);
@@ -200,11 +200,11 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
 
     @Embeddable
     static class InlinedEmbeddable {
-        public Instant instantEmbeddable;
+        Instant instantEmbeddable;
 
-        public InlinedEmbeddable() {}
+        InlinedEmbeddable() {}
 
-        public InlinedEmbeddable(Instant instantEmbeddable) {
+        InlinedEmbeddable(Instant instantEmbeddable) {
             this.instantEmbeddable = instantEmbeddable;
         }
     }
@@ -212,16 +212,16 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
     @Embeddable
     @Struct(name = "aggregate_embeddable")
     static class AggregateEmbeddable {
-        public Instant instant;
+        Instant instant;
 
-        public AggregateEmbeddable() {}
+        AggregateEmbeddable() {}
 
-        public AggregateEmbeddable(Instant instant) {
+        AggregateEmbeddable(Instant instant) {
             this.instant = instant;
         }
     }
 
-    public void inTransaction(TimeZone timeZone, Consumer<EntityManager> action) {
+    private void inTransaction(TimeZone timeZone, Consumer<EntityManager> action) {
         SessionFactoryImplementor sessionFactoryImpl = sessionFactoryScope.getSessionFactory();
         try (Session sessionWithTimeZone =
                 sessionFactoryImpl.withOptions().jdbcTimeZone(timeZone).openSession()) {
@@ -229,7 +229,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         }
     }
 
-    public <R> R fromTransaction(TimeZone timeZone, Function<EntityManager, R> action) {
+    private <R> R fromTransaction(TimeZone timeZone, Function<EntityManager, R> action) {
         SessionFactoryImplementor sessionFactoryImpl = sessionFactoryScope.getSessionFactory();
         try (Session sessionWithTimeZone =
                 sessionFactoryImpl.withOptions().jdbcTimeZone(timeZone).openSession()) {
