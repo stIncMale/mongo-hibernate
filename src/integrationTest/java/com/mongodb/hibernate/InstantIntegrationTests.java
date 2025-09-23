@@ -184,7 +184,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         Collection<Instant> instantCollection;
         Instant[] instants;
         AggregateEmbeddable aggregateEmbeddable;
-        InlinedEmbeddable inlinedEmbeddable;
+        FlattenedEmbeddable flattenedEmbeddable;
 
         Item() {}
 
@@ -194,18 +194,18 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
             this.instantCollection = List.of(instant, instant);
             this.instants = instantCollection.toArray(new Instant[] {});
             this.aggregateEmbeddable = new AggregateEmbeddable(instant);
-            this.inlinedEmbeddable = new InlinedEmbeddable(instant);
+            this.flattenedEmbeddable = new FlattenedEmbeddable(instant);
         }
     }
 
     @Embeddable
-    static class InlinedEmbeddable {
-        Instant instantEmbeddable;
+    static class FlattenedEmbeddable {
+        Instant flattenedInstant;
 
-        InlinedEmbeddable() {}
+        FlattenedEmbeddable() {}
 
-        InlinedEmbeddable(Instant instantEmbeddable) {
-            this.instantEmbeddable = instantEmbeddable;
+        FlattenedEmbeddable(Instant instant) {
+            flattenedInstant = instant;
         }
     }
 
