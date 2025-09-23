@@ -32,9 +32,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import org.hibernate.Session;
 import org.hibernate.annotations.Struct;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.testing.orm.junit.DomainModel;
 import org.hibernate.testing.orm.junit.SessionFactory;
 import org.hibernate.testing.orm.junit.SessionFactoryScope;
@@ -79,8 +77,8 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
      */
     private static Stream<Arguments> instantPersistAndReadParameters() {
         return differentTimeZones().flatMap(arguments -> {
-            TimeZone systemDefaultTimeZone = (TimeZone) arguments.get()[0];
-            TimeZone jdbcTimezone = (TimeZone) arguments.get()[0];
+            var systemDefaultTimeZone = (TimeZone) arguments.get()[0];
+            var jdbcTimezone = (TimeZone) arguments.get()[0];
             return Stream.of(
                     Arguments.of(
                             systemDefaultTimeZone,
@@ -160,7 +158,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
     @MethodSource("instantPersistAndReadParameters")
     void testInstantPersistAndReadDifferentTimeZones(
             TimeZone writeTimeZone, TimeZone readTimeZone, Instant toSave, Instant toRead) throws Exception {
-        TimeZone systemTimeZone = TimeZone.getTimeZone("UTC+10");
+        var systemTimeZone = TimeZone.getTimeZone("UTC+10");
         var instantItem = new Item(1, toSave);
 
         withSystemTimeZone(systemTimeZone, () -> inTransaction(writeTimeZone, session -> session.persist(instantItem)));
@@ -222,16 +220,16 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
     }
 
     private void inTransaction(TimeZone timeZone, Consumer<EntityManager> action) {
-        SessionFactoryImplementor sessionFactoryImpl = sessionFactoryScope.getSessionFactory();
-        try (Session sessionWithTimeZone =
+        var sessionFactoryImpl = sessionFactoryScope.getSessionFactory();
+        try (var sessionWithTimeZone =
                 sessionFactoryImpl.withOptions().jdbcTimeZone(timeZone).openSession()) {
             TransactionUtil.inTransaction(sessionWithTimeZone, action);
         }
     }
 
     private <R> R fromTransaction(TimeZone timeZone, Function<EntityManager, R> action) {
-        SessionFactoryImplementor sessionFactoryImpl = sessionFactoryScope.getSessionFactory();
-        try (Session sessionWithTimeZone =
+        var sessionFactoryImpl = sessionFactoryScope.getSessionFactory();
+        try (var sessionWithTimeZone =
                 sessionFactoryImpl.withOptions().jdbcTimeZone(timeZone).openSession()) {
             return TransactionUtil.fromTransaction(sessionWithTimeZone, action);
         }
