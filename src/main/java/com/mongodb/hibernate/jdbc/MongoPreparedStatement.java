@@ -193,11 +193,11 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
     }
 
     @Override
-    public void setTimestamp(int parameterIndex, Timestamp timestamp, Calendar calendar) throws SQLException {
+    public void setTimestamp(int parameterIndex, Timestamp x, Calendar calendar) throws SQLException {
         checkClosed();
         checkParameterIndex(parameterIndex);
         checkTimeZone(calendar.getTimeZone());
-        setParameter(parameterIndex, toBsonValue(timestamp));
+        setParameter(parameterIndex, toBsonValue(x));
     }
 
     @Override
