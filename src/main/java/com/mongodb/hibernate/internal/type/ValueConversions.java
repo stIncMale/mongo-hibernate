@@ -160,7 +160,7 @@ public final class ValueConversions {
         return new BsonDateTime(timestamp.getTime());
     }
 
-    public static BsonDateTime toBsonValue(Instant instant) {
+    private static BsonDateTime toBsonValue(Instant instant) {
         return new BsonDateTime(instant.toEpochMilli());
     }
 
