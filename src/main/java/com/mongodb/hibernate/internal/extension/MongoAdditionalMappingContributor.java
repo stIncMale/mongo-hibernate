@@ -87,6 +87,7 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
     }
 
     private static void checkPropertyTypes(PersistentClass persistentClass) {
+        forbidTemporalTypes(persistentClass, persistentClass.getIdentifierProperty());
         persistentClass.getProperties().forEach(property -> {
             forbidTemporalTypes(persistentClass, property);
         });
