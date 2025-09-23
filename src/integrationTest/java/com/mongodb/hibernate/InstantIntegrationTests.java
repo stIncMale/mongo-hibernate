@@ -172,7 +172,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         assertEq(expectedItem, loadedInstantItem);
     }
 
-    @Entity(name = "Item")
+    @Entity
     @Table(name = Item.COLLECTION_NAME)
     static class Item {
         private static final String COLLECTION_NAME = "items";
