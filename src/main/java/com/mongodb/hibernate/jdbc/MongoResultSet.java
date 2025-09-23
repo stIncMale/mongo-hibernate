@@ -34,7 +34,6 @@ package com.mongodb.hibernate.jdbc;
 
 import static com.mongodb.hibernate.internal.MongoAssertions.assertFalse;
 import static com.mongodb.hibernate.internal.MongoAssertions.assertNotNull;
-import static com.mongodb.hibernate.jdbc.MongoPreparedStatement.checkTimeZone;
 import static java.lang.String.format;
 
 import com.mongodb.client.MongoCursor;
@@ -44,8 +43,7 @@ import java.sql.Array;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Timestamp;
-import java.util.Calendar;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import org.bson.BsonDocument;
@@ -149,14 +147,6 @@ final class MongoResultSet implements ResultSetAdapter {
     }
 
     @Override
-    public @Nullable Timestamp getTimestamp(int columnIndex, Calendar calendar) throws SQLException {
-        checkClosed();
-        checkColumnIndex(columnIndex);
-        checkTimeZone(calendar.getTimeZone());
-        return getValue(columnIndex, ValueConversions::toTimestampDomainValue);
-    }
-
-    @Override
     public @Nullable BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         checkClosed();
         checkColumnIndex(columnIndex);
@@ -179,6 +169,8 @@ final class MongoResultSet implements ResultSetAdapter {
             value = getValue(columnIndex, ValueConversions::toObjectIdDomainValue);
         } else if (type.equals(BsonDocument.class)) {
             value = getValue(columnIndex, ValueConversions::toBsonDocumentDomainValue);
+        } else if (type.equals(Instant.class)) {
+            value = getValue(columnIndex, ValueConversions::toInstantDomainValue);
         } else {
             throw new SQLFeatureNotSupportedException(
                     format("Type [%s] for a column with index [%d] is not supported", type, columnIndex));

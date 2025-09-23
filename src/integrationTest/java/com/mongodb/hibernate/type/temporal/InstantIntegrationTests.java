@@ -68,13 +68,6 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
                 Arguments.of(ZoneId.of("Etc/GMT-1"), ZoneId.of("Etc/GMT+2")));
     }
 
-    /**
-     * Hibernate ORM will use TIMESTAMP_UTC SQL type by default (it is Hibernate ORM defined type, not JDBC). This means
-     * it will be treated as TIMESTAMP at JDBC level, with Calendar being UTC.
-     *
-     * <p>For array/collection elements and for persistent attributes of @Embeddable types the same Instant is
-     * propagated unchanged: each Instant is stored similarly to TIMESTAMP_UTC semantics
-     */
     private static Stream<Arguments> instantPersistAndReadParameters() {
         return differentTimeZones().flatMap(arguments -> {
             var tz0 = (ZoneId) arguments.get()[0];

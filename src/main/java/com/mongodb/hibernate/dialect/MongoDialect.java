@@ -31,8 +31,14 @@ import com.mongodb.hibernate.internal.type.MqlType;
 import com.mongodb.hibernate.internal.type.ObjectIdJavaType;
 import com.mongodb.hibernate.internal.type.ObjectIdJdbcType;
 import com.mongodb.hibernate.jdbc.MongoConnectionProvider;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Calendar;
 import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.boot.model.TypeContributions;
+import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.dialect.DatabaseVersion;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.aggregate.AggregateSupport;
@@ -40,6 +46,8 @@ import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.sql.ast.SqlAstTranslatorFactory;
 import org.hibernate.sql.ast.spi.SqlAppender;
+import org.hibernate.type.SqlTypes;
+import org.hibernate.type.descriptor.jdbc.TimestampUtcAsInstantJdbcType;
 import org.hibernate.type.descriptor.sql.internal.DdlTypeImpl;
 import org.jspecify.annotations.Nullable;
 
@@ -109,6 +117,7 @@ public class MongoDialect extends Dialect {
         contributeObjectIdType(typeContributions);
         typeContributions.contributeJdbcTypeConstructor(MongoArrayJdbcType.Constructor.INSTANCE);
         typeContributions.contributeJdbcType(MongoStructJdbcType.INSTANCE);
+        contributeInstantType(typeContributions);
     }
 
     private void contributeObjectIdType(TypeContributions typeContributions) {
@@ -124,6 +133,17 @@ public class MongoDialect extends Dialect {
                                 "unused from %s.contributeObjectIdType for SQL type code [%d]",
                                 MongoDialect.class.getSimpleName(), objectIdTypeCode),
                         this));
+    }
+
+    /**
+     * This makes Hibernate ORM use {@link PreparedStatement#setObject(int, Object,
+     * int)}/{@link ResultSet#getObject(int, Class)} instead of {@link PreparedStatement#setTimestamp(int, Timestamp,
+     * Calendar)}/{@link ResultSet#getTimestamp(int, Calendar)} when storing/reading values of the {@link Instant} type,
+     * without the need to rely on {@link AvailableSettings#JAVA_TIME_USE_DIRECT_JDBC}.
+     */
+    private static void contributeInstantType(TypeContributions typeContributions) {
+        var jdbcTypeRegistry = typeContributions.getTypeConfiguration().getJdbcTypeRegistry();
+        jdbcTypeRegistry.addDescriptor(SqlTypes.TIMESTAMP_UTC, TimestampUtcAsInstantJdbcType.INSTANCE);
     }
 
     @Override

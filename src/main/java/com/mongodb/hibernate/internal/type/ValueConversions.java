@@ -29,7 +29,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import org.bson.BsonArray;
@@ -81,8 +80,6 @@ public final class ValueConversions {
         } else if (value instanceof char[] v) {
             return toBsonValue(v);
         } else if (value instanceof ObjectId v) {
-            return toBsonValue(v);
-        } else if (value instanceof Timestamp v) {
             return toBsonValue(v);
         } else if (value instanceof Instant v) {
             return toBsonValue(v);
@@ -156,11 +153,7 @@ public final class ValueConversions {
         return new BsonObjectId(value);
     }
 
-    public static BsonDateTime toBsonValue(Timestamp timestamp) {
-        return new BsonDateTime(timestamp.getTime());
-    }
-
-    private static BsonDateTime toBsonValue(Instant instant) {
+    public static BsonDateTime toBsonValue(Instant instant) {
         return new BsonDateTime(instant.toEpochMilli());
     }
 
@@ -315,8 +308,8 @@ public final class ValueConversions {
         return value.getValue();
     }
 
-    public static Timestamp toTimestampDomainValue(BsonValue value) {
-        return new Timestamp(value.asDateTime().getValue());
+    public static Instant toInstantDomainValue(BsonValue value) {
+        return toDomainValue(value.asDateTime());
     }
 
     private static Instant toDomainValue(BsonDateTime value) {

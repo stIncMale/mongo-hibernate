@@ -41,7 +41,6 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
-import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Calendar;
 import java.util.List;
@@ -253,9 +252,8 @@ class MongoPreparedStatementTests {
                 () -> asserter.accept(() -> mongoPreparedStatement.setBytes(parameterIndex, "".getBytes())),
                 () -> asserter.accept(
                         () -> mongoPreparedStatement.setObject(parameterIndex, Mockito.mock(Array.class), Types.OTHER)),
-                () -> asserter.accept(() -> mongoPreparedStatement.setArray(parameterIndex, Mockito.mock(Array.class))),
                 () -> asserter.accept(
-                        () -> mongoPreparedStatement.setTimestamp(parameterIndex, new Timestamp(now), calendar)));
+                        () -> mongoPreparedStatement.setArray(parameterIndex, Mockito.mock(Array.class))));
     }
 
     private static void checkMethodsWithOpenPrecondition(

@@ -34,15 +34,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLSyntaxErrorException;
-import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.ZoneOffset;
-import java.time.zone.ZoneRules;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.function.Consumer;
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
@@ -52,7 +48,6 @@ import org.bson.types.ObjectId;
 
 final class MongoPreparedStatement extends MongoStatement implements PreparedStatementAdapter {
 
-    private static final ZoneRules ETC_UTC_ZONE_RULES = ZoneRules.of(ZoneOffset.UTC);
     private final BsonDocument command;
 
     private final List<ParameterValueSetter> parameterValueSetters;
@@ -170,6 +165,9 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
             value = toBsonValue(assertInstanceOf(x, ObjectId.class));
         } else if (targetSqlType == MongoStructJdbcType.JDBC_TYPE.getVendorTypeNumber()) {
             value = assertInstanceOf(x, BsonDocument.class);
+        } else if (targetSqlType == JDBCType.TIMESTAMP_WITH_TIMEZONE.getVendorTypeNumber()
+                && x instanceof Instant instant) {
+            value = toBsonValue(instant);
         } else {
             throw new SQLFeatureNotSupportedException(format(
                     "Parameter value [%s] of SQL type [%d] with index [%d] is not supported",
@@ -188,14 +186,6 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
     public void setArray(int parameterIndex, Array x) throws SQLException {
         checkClosed();
         checkParameterIndex(parameterIndex);
-        setParameter(parameterIndex, toBsonValue(x));
-    }
-
-    @Override
-    public void setTimestamp(int parameterIndex, Timestamp x, Calendar calendar) throws SQLException {
-        checkClosed();
-        checkParameterIndex(parameterIndex);
-        checkTimeZone(calendar.getTimeZone());
         setParameter(parameterIndex, toBsonValue(x));
     }
 
@@ -326,14 +316,6 @@ final class MongoPreparedStatement extends MongoStatement implements PreparedSta
                     }
                 }
             }
-        }
-    }
-
-    static void checkTimeZone(TimeZone timeZone) throws SQLFeatureNotSupportedException {
-        var zoneId = timeZone.toZoneId();
-        if (!zoneId.getRules().equals(ETC_UTC_ZONE_RULES)) {
-            throw new SQLFeatureNotSupportedException(
-                    format("Timezone [%s] is not supported. Only [Etc/UTC] timezone is supported", zoneId));
         }
     }
 }
