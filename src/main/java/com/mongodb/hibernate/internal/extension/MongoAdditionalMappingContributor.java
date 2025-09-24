@@ -25,8 +25,10 @@ import static java.lang.String.format;
 import com.mongodb.hibernate.internal.FeatureNotSupportedException;
 import jakarta.persistence.Embeddable;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -42,6 +44,7 @@ import org.hibernate.boot.spi.MetadataBuildingContext;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
+import org.hibernate.type.BasicPluralType;
 
 public final class MongoAdditionalMappingContributor implements AdditionalMappingContributor {
     /**
@@ -55,12 +58,13 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
             Calendar.class,
             Date.class,
             java.sql.Date.class,
-            java.sql.Timestamp.class,
+            Timestamp.class,
             Time.class,
             LocalTime.class,
             LocalDateTime.class,
             ZonedDateTime.class,
-            OffsetTime.class);
+            OffsetTime.class,
+            OffsetDateTime.class);
 
     public MongoAdditionalMappingContributor() {}
 
@@ -130,11 +134,23 @@ public final class MongoAdditionalMappingContributor implements AdditionalMappin
     }
 
     private static void forbidTemporalTypes(PersistentClass persistentClass, Property property) {
-        var persistenceAttributeType = property.getType().getReturnedClass();
-        if (UNSUPPORTED_TEMPORAL_TYPES.contains(persistenceAttributeType)) {
+        var persistentAttributeType = property.getType();
+        var pluralPersistentAttribute = false;
+        Class<?> classToCheck;
+        if (persistentAttributeType instanceof BasicPluralType<?, ?> pluralPersistentAttributeType) {
+            pluralPersistentAttribute = true;
+            classToCheck = pluralPersistentAttributeType.getElementType().getJavaType();
+        } else {
+            classToCheck = persistentAttributeType.getReturnedClass();
+        }
+        if (UNSUPPORTED_TEMPORAL_TYPES.contains(classToCheck)) {
             throw new FeatureNotSupportedException(format(
-                    "%s: the persistent attribute [%s] has type [%s] that is not supported",
-                    persistentClass, property.getName(), property.getType()));
+                    pluralPersistentAttribute
+                            ? "%s: the plural persistent attribute [%s] has element type [%s] that is not supported"
+                            : "%s: the persistent attribute [%s] has type [%s] that is not supported",
+                    persistentClass,
+                    property.getName(),
+                    classToCheck.getTypeName()));
         }
     }
 

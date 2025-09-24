@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mongodb.hibernate;
+package com.mongodb.hibernate.type.temporal;
 
 import static com.mongodb.hibernate.MongoTestAssertions.assertEq;
 
