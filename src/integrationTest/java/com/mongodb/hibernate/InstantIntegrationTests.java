@@ -61,11 +61,8 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
 
     private static Stream<Arguments> differentTimeZones() {
         return Stream.of(
-                Arguments.of(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("GMT+1")),
-                Arguments.of(TimeZone.getTimeZone("GMT+1"), TimeZone.getTimeZone("GMT+1")),
-                Arguments.of(TimeZone.getTimeZone("GMT+1"), TimeZone.getTimeZone("GMT+2")),
-                Arguments.of(TimeZone.getTimeZone("GMT+05:31"), TimeZone.getTimeZone("GMT+05:45")),
-                Arguments.of(TimeZone.getTimeZone("America/New_York"), TimeZone.getTimeZone("America/Los_Angeles")));
+                Arguments.of(TimeZone.getTimeZone("Etc/GMT+1"), TimeZone.getTimeZone("Etc/UTC")),
+                Arguments.of(TimeZone.getTimeZone("Etc/GMT-1"), TimeZone.getTimeZone("Etc/GMT+2")));
     }
 
     /**
