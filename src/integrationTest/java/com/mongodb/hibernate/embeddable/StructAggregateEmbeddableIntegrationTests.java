@@ -535,7 +535,7 @@ public class StructAggregateEmbeddableIntegrationTests implements SessionFactory
     }
 
     @Entity
-    @Table(name = "items")
+    @Table(name = COLLECTION_NAME)
     static class ItemWithNestedValues {
         @Id
         EmbeddableIntegrationTests.Single flattenedId;
