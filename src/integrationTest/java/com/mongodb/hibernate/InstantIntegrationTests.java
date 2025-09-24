@@ -98,7 +98,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         });
     }
 
-    /** Write: system tz: T1, session tz: T2 Read: system tz: T1, session tz: T2 */
+    /** Write - system tz: T1, session tz: T2. Read - system tz: T1, session tz: T2. */
     @ParameterizedTest(
             name =
                     "Instant: system TZ equal per read/write; system TZ not equal session TZ; session TZ equal per read/write;"
@@ -117,7 +117,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         assertEq(expectedItem, loadedInstantItem);
     }
 
-    /** Write: system tz: T1, session tz: T1 Read: system tz: T2, session tz: T2 */
+    /** Write - system tz: T1, session tz: T1. Read - system tz: T2, session tz: T2. */
     @ParameterizedTest(
             name = "Instant: system TZ differ per read/write; session TZ equals system TZ;"
                     + "systemDefaultTimeZone={0}, jdbcTimeZone={1}")
@@ -135,7 +135,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
         assertEq(expectedItem, loadedInstantItem);
     }
 
-    /** Write: system tz: T1, session tz: T2 Read: system tz: T1, session tz: T3 */
+    /** Write - system tz: T1, session tz: T2. Read - system tz: T1, session tz: T3. */
     @ParameterizedTest(
             name =
                     "Instant:system TZ equal per read/write; system TZ not equal session TZ; session TZ not equal per read/write;"
