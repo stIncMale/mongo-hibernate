@@ -78,7 +78,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
     private static Stream<Arguments> instantPersistAndReadParameters() {
         return differentTimeZones().flatMap(arguments -> {
             var systemDefaultTimeZone = (TimeZone) arguments.get()[0];
-            var jdbcTimezone = (TimeZone) arguments.get()[0];
+            var jdbcTimezone = (TimeZone) arguments.get()[1];
             return Stream.of(
                     Arguments.of(
                             systemDefaultTimeZone,
