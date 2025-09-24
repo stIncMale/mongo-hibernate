@@ -81,9 +81,10 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
                             systemDefaultTimeZone,
                             jdbcTimezone,
                             // Attribute or an element of an attribute to save.
-                            Instant.parse("2007-12-03T10:15:30.00Z"),
+                            // We support milliseconds precision, so nanoseconds are rounded down to milliseconds.
+                            Instant.parse("2007-12-03T10:15:30.002900000Z"),
                             // Expected attribute or an element of an attribute after read.
-                            Instant.parse("2007-12-03T10:15:30.00Z")),
+                            Instant.parse("2007-12-03T10:15:30.002000000Z")),
                     Arguments.of(
                             systemDefaultTimeZone,
                             jdbcTimezone,
@@ -93,13 +94,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
                             systemDefaultTimeZone,
                             jdbcTimezone,
                             Instant.parse("-000001-12-03T10:15:30Z"),
-                            Instant.parse("-000001-12-03T10:15:30Z")),
-                    Arguments.of(
-                            systemDefaultTimeZone,
-                            jdbcTimezone,
-                            // We support milliseconds precision, so nanoseconds are rounded down to milliseconds.
-                            Instant.parse("2007-12-03T10:15:30.002900000Z"),
-                            Instant.parse("2007-12-03T10:15:30.002000000Z")));
+                            Instant.parse("-000001-12-03T10:15:30Z")));
         });
     }
 
