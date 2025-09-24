@@ -51,7 +51,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 @ExtendWith(MongoExtension.class)
 class InstantIntegrationTests implements SessionFactoryScopeAware {
 
-    private static final TimeZone CURRENT_JVM_TIMEZONE = TimeZone.getDefault();
+    private static final TimeZone ORIGINAL_JVM_TIMEZONE = TimeZone.getDefault();
     private SessionFactoryScope sessionFactoryScope;
 
     @Override
@@ -230,7 +230,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
             TimeZone.setDefault(timeZone);
             runnable.run();
         } finally {
-            TimeZone.setDefault(CURRENT_JVM_TIMEZONE);
+            TimeZone.setDefault(ORIGINAL_JVM_TIMEZONE);
         }
     }
 
@@ -239,7 +239,7 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
             TimeZone.setDefault(timeZone);
             return callable.call();
         } finally {
-            TimeZone.setDefault(CURRENT_JVM_TIMEZONE);
+            TimeZone.setDefault(ORIGINAL_JVM_TIMEZONE);
         }
     }
 }
