@@ -69,10 +69,10 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
     }
 
     /**
-     * Hibernate ORM will use TIMESTAMP_UTC Sql type by default (it is Hibernate ORM defined type, not JDBC). This means
+     * Hibernate ORM will use TIMESTAMP_UTC SQL type by default (it is Hibernate ORM defined type, not JDBC). This means
      * it will be treated as TIMESTAMP at JDBC level, with Calendar being UTC.
      *
-     * <p>For array/collection element values and for @Struct/@Embeddable component attributes the same Instant is
+     * <p>For array/collection elements and for persistent attributes of @Embeddable types the same Instant is
      * propagated unchanged: each Instant is stored similarly to TIMESTAMP_UTC semantics
      */
     private static Stream<Arguments> instantPersistAndReadParameters() {
