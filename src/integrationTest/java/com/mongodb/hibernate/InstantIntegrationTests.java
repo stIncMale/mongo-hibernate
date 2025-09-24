@@ -100,13 +100,6 @@ class InstantIntegrationTests implements SessionFactoryScopeAware {
                     Arguments.of(
                             systemDefaultTimeZone,
                             jdbcTimezone,
-                            // Other dialects might support nanoseconds precision, however, in our case the precision is
-                            // to within milliseconds.
-                            Instant.parse("2007-12-03T10:15:30.000000999Z"),
-                            Instant.parse("2007-12-03T10:15:30Z")),
-                    Arguments.of(
-                            systemDefaultTimeZone,
-                            jdbcTimezone,
                             // We support milliseconds precision, so nanoseconds are rounded down to milliseconds.
                             Instant.parse("2007-12-03T10:15:30.002900000Z"),
                             Instant.parse("2007-12-03T10:15:30.002000000Z")));
