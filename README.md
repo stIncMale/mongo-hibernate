@@ -35,7 +35,7 @@ instead of SQL. This product works by:
 - [Manual](https://www.mongodb.com/docs/languages/java/mongodb-hibernate/current)
 - [API](https://javadoc.io/doc/org.mongodb/mongodb-hibernate/latest/index.html)
 
-[Standalone deployments](https://www.mongodb.com/docs/manual/reference/glossary/#std-term-standalone) are not supported,
+MongoDB [standalone deployments](https://www.mongodb.com/docs/manual/reference/glossary/#std-term-standalone) are not supported,
 because they [do not support transactions](https://www.mongodb.com/docs/manual/core/transactions-production-consideration/).
 If you use one, you may [convert it to a replica set](https://www.mongodb.com/docs/manual/tutorial/convert-standalone-to-replica-set/).
 
@@ -53,6 +53,23 @@ Use ["Extension for Hibernate ORM" at jira.mongodb.org](https://jira.mongodb.org
 ### Feature Requests
 
 Use ["Drivers & Frameworks"/"Frameworks (e.g. Django, Hibernate, EFCore)" at feedback.mongodb.com" at feedback.mongodb.com](https://feedback.mongodb.com/?category=7548141831345841376).
+
+### Examples
+
+[Maven](https://maven.apache.org/) is used as a build tool.
+
+The example applications are located in [`./example`](example).
+They require a MongoDB deployment accessible at `localhost:27017`.
+
+#### Build and Run from Source
+
+```console
+source ./.evergreen/java-config.sh \
+  && ./gradlew -PjavaVersion=${JAVA_VERSION} publishToMavenLocal \
+  && ./example/mvnw clean verify -f ./example/pom.xml \
+    -DjavaVersion="${JAVA_VERSION}" \
+    -DprojectVersion="$(./gradlew -q printProjectVersion)"
+```
 
 ## Contributor Documentation
 
@@ -102,7 +119,7 @@ This project uses separate directories for unit and integration tests:
 - [`./src/test`](src/test)
 - [`./src/integrationTest`](src/integrationTest)
 
-Integration tests require a MongoDB deployment with test commands enabled,  which may be achieved with the
+Integration tests require a MongoDB deployment with test commands enabled, which may be achieved with the
 [`--setParameter enableTestCommands=1`](https://www.mongodb.com/docs/manual/reference/parameters/)
 command-line arguments.
 

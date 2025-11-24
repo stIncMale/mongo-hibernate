@@ -16,3 +16,7 @@ echo "MongoDB version: ${MONGODB_VERSION}; topology: ${TOPOLOGY}"
 ./gradlew -version
 
 ./gradlew -PjavaVersion=${JAVA_VERSION} --stacktrace --info --continue clean integrationTest
+
+echo "mongo-hibernate: running examples ..."
+./gradlew -PjavaVersion=${JAVA_VERSION} publishToMavenLocal \
+  && ./example/mvnw clean verify -f ./example/pom.xml -DjavaVersion="${JAVA_VERSION}" -DprojectVersion="$(./gradlew -q printProjectVersion)"
