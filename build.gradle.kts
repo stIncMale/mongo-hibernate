@@ -219,6 +219,9 @@ publishing {
     repositories {
         // publish to local build dir for testing
         // `./gradlew publishMavenPublicationToLocalBuildRepository`
+        //
+        // publish to the local Maven cache
+        // `./gradlew publishToMavenLocal`
         maven {
             url = uri(localBuildRepo.get())
             name = "LocalBuild"
@@ -236,8 +239,8 @@ publishing {
                 url = "https://www.mongodb.com/"
                 licenses {
                     license {
-                        name = "The Apache License, Version 2.0"
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        name = "Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
                     }
                 }
                 developers {
@@ -248,8 +251,8 @@ publishing {
                 }
                 scm {
                     url.set("https://github.com/mongodb/mongo-hibernate")
-                    connection.set("scm:https://github.com/mongodb/mongo-hibernate.git")
-                    developerConnection.set("scm:https://github.com/mongodb/mongo-hibernate.git")
+                    connection.set("scm:git:https://github.com/mongodb/mongo-hibernate.git")
+                    developerConnection.set("scm:git:https://github.com/mongodb/mongo-hibernate.git")
                 }
             }
         }
